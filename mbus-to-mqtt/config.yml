@@ -1,0 +1,27 @@
+name: "mbus to mqtt"
+description: "Unofficial M-Bus to mqtt Add-on"
+version: "0.1.0"
+slug: "mbus_to_mqtt"
+init: false
+arch:
+  - aarch64
+  - amd64
+  - armhf
+  - armv7
+  - i386
+options: 
+  mqtt_user: null
+  mqtt_pass: null
+  mqtt_host: "192.168.x.x"
+  mqtt_topic: "mbusmeters"
+  mbus_address: "FFFFFFFFFFFFFFFF"
+  mbus_gateway: "192.168.x.x"
+  mbus_gateway_port: "10002"
+schema: 
+  mqtt_user: "str?"
+  mqtt_pass: "password?"
+  mqtt_host: "str?"
+  mqtt_topic: "str?"
+  mbus_address: "str?"
+  mbus_gateway: "str?"
+  mbus_gateway_port: "int?"
