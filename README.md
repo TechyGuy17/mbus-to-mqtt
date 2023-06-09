@@ -41,6 +41,10 @@ Anyone is more then welcome to contribute to the project, to contribute, please 
 
 Thank you! Please open an issue and state the problem and some notes so I can recreate the issue
 
+## Honerable mention
+
+I want to thank [Daniel Glaser / the78mole](https://github.com/the78mole) for the inspiration to create this project, I was looking for a solution to use M-bus in HA and found [this guide](https://the78mole.de/taking-your-m-bus-online-with-mqtt/) which helped me create this project
+
 ## Note
 
 This is a very crude solution and I do not garantuee 24/7 uptime. Its a hobby project written in 1 hour and from the start only made for my own home
