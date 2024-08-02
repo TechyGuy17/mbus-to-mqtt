@@ -1,0 +1,46 @@
+mqtt:
+  sensor:
+    - name: "Power Meter"
+      unique_id: mbusmeters.FFFFFFFFFFFFFFFF
+      state_topic: "mbusmeters/FFFFFFFFFFFFFFFF"
+      unit_of_measurement: "kWh"
+      device_class: energy
+      state_class: total
+      value_template: >
+        {%- for rec in value_json.MBusData.DataRecord -%}
+        {%- if ( 
+                 ( rec.Function == "Instantaneous value" )
+            and  ( rec.StorageNumber == "0" )
+            and  ( rec._id == "4" )
+              ) -%}
+         {{ rec.Value | float / 100.0 | round(2) }}
+         {% endif -%}
+         {% endfor -%}
+      json_attributes_topic: "mbusmeters/FFFFFFFFFFFFFFFF"
+      json_attributes_template: |-
+        {
+        {% for mbd in value_json.MBusData.SlaveInformation -%}
+        "{{ mbd | lower }}" : "{{ value_json.MBusData.SlaveInformation[mbd] }}",
+        {% endfor -%}
+        {%- for drec in value_json.MBusData.DataRecord %}
+        {%- if not drec.Function == "More records follow" %}
+        "{{ drec.Function | replace(' ','_') }}_
+        {%- if drec.Unit is defined -%}
+        {{ drec.Unit | replace(' ','_') }}_
+        {%- endif -%}
+        {%- if drec.StorageNumber is defined -%}
+        {{ drec.StorageNumber }}_
+        {%- endif -%}
+        {%- if drec.Tariff is defined -%}
+        {{ drec.Tariff }}_
+        {%- endif -%}
+        {%- if drec.Device is defined -%}
+        {{ drec.Device }}_
+        {%- endif -%}
+        {{ drec._id }}" : "{{ drec.Value }}"
+        {%- if not loop.last -%}
+        ,
+        {%- endif -%}
+        {%- endif -%}
+        {% endfor %}
+        }
