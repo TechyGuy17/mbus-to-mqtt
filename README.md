@@ -27,6 +27,7 @@ When installed, you will see a configuration tab, bellow is a explination what e
   mbus_gateway: The IP address of the M-bus gateway
   mbus_gateway_port: The port to connect to of the M-bus gateway, OBS! Note that it must be a TCP port, NOT UDP
 ```
+After this, copy the content of sensor.yaml to configuration.yaml of home assistant, change the name of the sensor and the mbus secondary address on all the places were it says FFFFFFFFFFFFFFFF. Restart home assistant and you're all set!
 
 ## Contribute
 
