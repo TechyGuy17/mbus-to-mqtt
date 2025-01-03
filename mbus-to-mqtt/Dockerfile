@@ -2,11 +2,11 @@ ARG BUILD_FROM
 FROM $BUILD_FROM
 
 
-COPY ["fetch_meters.sh", "/"] 
+COPY . /src
+WORKDIR /src
+RUN ["chmod", "+x", "fetch_meters.sh", "&&", "mv", "fetch_meters.sh", ".."]
 
-RUN chmod +x /fetch_meters.sh
-
-RUN apk add --no-cache --virtual .build-dependencies \ 
+RUN apk add --no-cache --virtual .build-dependencies \
     make \
     automake \
     autoconf \
@@ -16,9 +16,10 @@ RUN apk add --no-cache --virtual .build-dependencies \
     mosquitto-clients \
     jq \
     py3-pip \
-    bash 
+    bash \
+    yq-go
 
-RUN pip3 install yq
+#RUN pip3 install yq
 
 RUN git clone https://github.com/rscada/libmbus
 
@@ -28,4 +29,5 @@ RUN cd libmbus && ./build.sh && ./configure && make -j4 && make install
 RUN crontab -l | { cat; echo "0 * * * * bash /fetch_meters.sh"; } | crontab -
 
 CMD crond -f
+
 
