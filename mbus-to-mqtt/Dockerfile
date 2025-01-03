@@ -4,7 +4,7 @@ FROM $BUILD_FROM
 
 COPY . /src
 WORKDIR /src
-RUN ["pwd", "&&", "chmod", "+x", "fetch_meters.sh", "&&", "mv", "fetch_meters.sh", ".."]
+RUN ["pwd", "&&", "chmod", "+x", "fetch_meters.sh"]
 
 RUN apk add --no-cache --virtual .build-dependencies \
     make \
@@ -26,7 +26,7 @@ RUN git clone https://github.com/rscada/libmbus
 RUN cd libmbus && ./build.sh && ./configure && make -j4 && make install
 
 # Add the cron job
-RUN crontab -l | { cat; echo "*/30 * * * * bash /fetch_meters.sh"; } | crontab -
+RUN crontab -l | { cat; echo "*/30 * * * * bash /src/fetch_meters.sh"; } | crontab -
 
 CMD crond -f
 
