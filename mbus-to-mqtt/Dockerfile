@@ -4,7 +4,7 @@ FROM $BUILD_FROM
 
 COPY . /src
 WORKDIR /src
-RUN ["chmod", "+x", "fetch_meters.sh", "&&", "mv", "fetch_meters.sh", ".."]
+RUN ["pwd", "&&", "chmod", "+x", "fetch_meters.sh", "&&", "mv", "fetch_meters.sh", ".."]
 
 RUN apk add --no-cache --virtual .build-dependencies \
     make \
