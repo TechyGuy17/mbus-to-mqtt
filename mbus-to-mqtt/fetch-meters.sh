@@ -18,11 +18,9 @@ for METER in "${METERARRAY[@]}"
 do
     echo -n "Getting data from $METER..."
     # The sed is for replacing the @ with _ to be able to match on it in HASS templates
-    METER_DATA=$(mbus-tcp-request-data-multi-reply $DEVICE $PORT $METER | xq | sed -e "s/@/_/")
+    METER_DATA=$(mbus-tcp-request-data-multi-reply $DEVICE $PORT $METER | xq . | sed -e "s/@/_/")
     mosquitto_pub -h $MQTT_HOST -u $MQTT_USER -P $MQTT_PASS \
         -t $MQTT_TOPIC/$METER -m "${METER_DATA}"
     BYTCNT=$(echo "$METER_DATA" | wc -c)
     echo "  $BYTCNT bytes sent"
 done
-
-    
