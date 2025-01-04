@@ -1,6 +1,6 @@
 name: "mbus to mqtt"
 description: "Unofficial M-Bus to mqtt Add-on"
-version: "0.1.3"
+version: "0.1.1"
 slug: "mbus_to_mqtt"
 init: false
 arch:
