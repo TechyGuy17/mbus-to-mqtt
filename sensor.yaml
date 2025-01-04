@@ -44,3 +44,29 @@ mqtt:
         {%- endif -%}
         {% endfor %}
         }
+    # Example for LAS LAN-WMBUS-G2-TH
+    - name: "Temperature Sensor"
+      unique_id: mbusmeters.FFFFFFFFFFFFFFFF
+      state_topic: "mbusmeters/FFFFFFFFFFFFFFFF"
+      unit_of_measurement: "°C"
+      device_class: "temperature"
+      value_template: >
+        {%- for rec in value_json.MBusData.DataRecord -%}
+        {%- if ( 
+                 ( rec.Function == "Instantaneous value" )
+            and  ( rec.StorageNumber == "0" )
+            and  ( rec._id == "4" )
+              ) -%}
+         {{ rec.Value | float / 100.0 | round(1) }}
+         {% endif -%}
+         {% endfor -%}
+      json_attributes_topic: "mbusmeters/FFFFFFFFFFFFFFFF"
+      json_attributes_template: |-
+         {
+         {% for mbd in value_json.MBusData.SlaveInformation -%}
+           {%if value_json.MBusData.SlaveInformation[mbd] != null%}
+         "{{ mbd | lower }}" : "{{ value_json.MBusData.SlaveInformation[mbd] }}",
+           {%endif%}
+         {% endfor -%}
+         }
+
