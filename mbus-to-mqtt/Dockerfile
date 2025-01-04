@@ -1,12 +1,15 @@
 ARG BUILD_FROM
 FROM $BUILD_FROM
 
+ENV CONFIG_PATH=/data/options.json
 
-COPY . /src
-WORKDIR /src
-RUN ["pwd", "&&", "chmod", "+x", "fetch_meters.sh"]
+SHELL ["/bin/bash", "-l", "-c"]
 
-RUN apk add --no-cache --virtual .build-dependencies \
+COPY ["fetch_meters.sh", "/"] 
+
+RUN chmod +x /fetch_meters.sh
+
+RUN apk add --no-cache --virtual .build-dependencies \ 
     make \
     automake \
     autoconf \
@@ -17,16 +20,18 @@ RUN apk add --no-cache --virtual .build-dependencies \
     jq \
     py3-pip \
     bash \
-    yq-go
+    pipx
 
-#RUN pip3 install yq
+RUN pipx install yq && pipx ensurepath 
+
+RUN source ~/.bashrc
 
 RUN git clone https://github.com/rscada/libmbus
 
 RUN cd libmbus && ./build.sh && ./configure && make -j4 && make install
 
 # Add the cron job
-RUN crontab -l | { cat; echo "*/15 * * * * bash /src/fetch_meters.sh"; } | crontab -
+RUN crontab -l | { cat; echo "*/15 * * * *  bash /fetch_meters.sh"; } | crontab -
 
 CMD crond -f
 
